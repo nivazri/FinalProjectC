@@ -1,48 +1,126 @@
-#include "stdbool.h"
+#ifndef STRUCTS_H_
+#define STRUCTS_H_
 
-/*------------------------
---- Struct declaration ---
---------------------------*/
+#include <stdbool.h>
+#include <stdio.h>
 
-typedef struct{ 						/* We need a 15 integers for the word, we can use the struct since minimum size for int is 16 */
-	union							/* Union struct since the word can be a command or data*/
-	{
-	    unsigned int eraBits : 2; 				/* First two are reserved for E.R.A bits*/
-		int dataBits			: 13;
+#include "consts.h"
+#include "enums.h"
 
-		struct{
-		    unsigned int eraBits : 2; 				/* First two are reserved for E.R.A bits*/
-			unsigned int dstMethod	: 2;		/* Destination Operand Address Method ID */
-			unsigned int srcMethod	: 2;		/* Source Operand Address Method ID */
-			unsigned int opcode	: 4;		/* Command ID */
-			unsigned int group	: 2;		/* Number of params passed to command ID*/
-			unsigned int unused	: 3;		/* Unused Bit, it is always 101 */
-		} commandBits;
+typedef struct
+{
+	char* name;
+	int is_instruction;
+	int is_external;
+	unsigned int address;
+} symbol;
 
-		struct{ /* Operation between two registers requires only one word*/
-		    unsigned int eraBits : 2; 				/* First two are reserved for E.R.A bits*/
-			unsigned int dstReg	: 6; 		/* Destination register Number*/
-			unsigned int srcReg	: 6; 		/* Source register Number*/
-			unsigned int unused 	: 1;		/* Unused Bit, it is always 0 */
-		} registerBits;
+/* A symbol node in the symbol table */
+typedef struct symbol_node* symbol_node_ptr;
+typedef struct symbol_node {
+	symbol current_symbol;
+	symbol_node_ptr next;
+} symbol_node;
 
-	}wordBits;
+/* Holds the line processing state */
+typedef struct line_info {
+	char* line_str;
+	int line_length;
+	int current_index;
+	int line_number;
+	char* file_name;
+} line_info;
 
-} WordMemory; /* Holds a 15 bits word*/
+/* Definition of a machine operation */
+typedef union {
+	struct {
+		unsigned int era : 2;
+		unsigned int target_operand_address_method : 2;
+		unsigned int source_operand_address_method : 2;
+		unsigned int op_code : 4;
+		unsigned int group : 2;
+		unsigned int rest : 20; /*unused bits*/
+	} bits;
+	unsigned int value;
+} encoded_operation;
 
-/*symbols table*/
-typedef struct{
-	char name[MAX_LABEL_LEN];	/* Label Name*/
-	int memAddress;			/* Label Address in memory*/
-	int isExtern;			/* Is the label extern or not*/
-	int isAction;		/*Is label action or not*/
-} symbol_table;
+/*
+ * Data definition
+ * A data is defined of a value (char or number) and an address
+ */
+typedef struct data {
+	union {
+		struct {
+			unsigned int number : 15;
+			/* unsigned int rest : 2; */
+		} bits;
+		unsigned int value;
+	} encoded_data;
+	unsigned int address;
+} data_definition;
 
-/*line*/
-typedef struct{
-	char *label;
-	int cmd;
-	char **args;
-    bool isEffectless;
-	bool isEOF;
-}input_line;
+/* Data Table Node */
+typedef struct data_node* data_node_ptr;
+typedef struct data_node {
+	data_definition current_data;
+	data_node_ptr next;
+} data_node;
+
+/* Holds the definition of the machine operation as instructed in the manual */
+typedef struct {
+	char* name;
+	unsigned int code;
+	unsigned int operands_number;
+} machine_operation_definition;
+
+/* Machine operation definitions node */
+typedef struct operation_node* operation_information_node_ptr;
+typedef struct operation_node {
+	machine_operation_definition data;
+	operation_information_node_ptr next;
+} operation_information_node;
+
+/* Holds data of decoded operation */
+typedef struct {
+	machine_operation_definition* operation;
+	char* source_operand;
+	char* target_operand;
+	ADDRESS_METHOD source_operand_address_method;
+	ADDRESS_METHOD target_operand_address_method;
+} decoded_operation;
+
+/* Presentation of operand memory word*/
+typedef union {
+	struct {
+		unsigned int era : 2;
+		unsigned int target_register_address : 6;
+		unsigned int source_register_address : 6;
+		unsigned int rest : 20;
+	} register_address;
+	struct {
+		unsigned int era: 2;
+		unsigned int operand_address : 6;
+		unsigned int rest : 20;
+	} non_register_address;
+	unsigned int value;
+} operand_memory_word;
+
+/* Holds output files */
+typedef struct {
+	FILE* extern_file;
+	FILE* entry_file;
+	FILE* ob_file;
+} compiler_output_files;
+
+/* Holds transition data */
+typedef struct {
+	char* prev_operation_operand;
+	ADDRESS_METHOD prev_operand_address_method;
+	unsigned int IC;
+	unsigned int DC;
+	bool is_compiler_error;
+	bool is_runtimer_error;
+	line_info* current_line_information;
+} transition_data;
+
+#endif /* STRUCTS_H_ */
