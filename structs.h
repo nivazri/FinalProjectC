@@ -34,14 +34,14 @@ typedef struct line_info {
 /* Definition of a machine operation */
 typedef union {
 	struct {
-		unsigned int era : 2;
-		unsigned int target_operand_address_method : 2;
-		unsigned int source_operand_address_method : 2;
-		unsigned int op_code : 4;
-		unsigned int group : 2;
-		unsigned int rest : 20; /*unused bits*/
+		unsigned int era : OPERATION_ERA_BITS_LENGTH;
+		unsigned int target_operand_address_method : OPERATION_ADDRESS_METHOD_BITS_LENGTH;
+		unsigned int source_operand_address_method : OPERATION_ADDRESS_METHOD_BITS_LENGTH;
+		unsigned int op_code : OPERATION_OP_CODE_BITS_LENGTH;
+		unsigned int group : OPERATION_GROUP_BITS_LENGTH;
+		unsigned int rest : OPERATION_REST_BITS; /*unused bits*/
 	} bits;
-	unsigned int value;
+	unsigned int value : MEMORY_WORD;
 } encoded_operation;
 
 /*
@@ -51,8 +51,7 @@ typedef union {
 typedef struct data {
 	union {
 		struct {
-			unsigned int number : 15;
-			/* unsigned int rest : 2; */
+			unsigned int number : MEMORY_WORD;
 		} bits;
 		unsigned int value;
 	} encoded_data;
@@ -92,17 +91,18 @@ typedef struct {
 /* Presentation of operand memory word*/
 typedef union {
 	struct {
-		unsigned int era : 2;
-		unsigned int target_register_address : 6;
-		unsigned int source_register_address : 6;
-		unsigned int rest : 20;
+		unsigned int era : OPERATION_ERA_BITS_LENGTH;
+		unsigned int target_register_address : REGISTER_ADDRESS_METHOD_BITS_LENGTH;
+		unsigned int source_register_address : REGISTER_ADDRESS_METHOD_BITS_LENGTH;
+		unsigned int rest : REGISTERS_REST_BITS;
 	} register_address;
+
 	struct {
-		unsigned int era: 2;
-		unsigned int operand_address : 6;
-		unsigned int rest : 20;
+		unsigned int era: OPERATION_ERA_BITS_LENGTH;
+		unsigned int operand_address : OPERAND_BITS;
 	} non_register_address;
-	unsigned int value;
+
+	unsigned int value : MEMORY_WORD;
 } operand_memory_word;
 
 /* Holds output files */

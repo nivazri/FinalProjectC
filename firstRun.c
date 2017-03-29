@@ -1,25 +1,23 @@
+/*
+ ====================================================================================
+ Name		: 	firstRun.c
+ Description: 	This file holds methods relevant to the first run
+ ====================================================================================
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 
 #include "structs.h"
 #include "functions.h"
-
-decoded_operation* get_decoded_operation(transition_data* transition);
-bool are_operand_methods_allowed_in_operation(decoded_operation* current_operation);
-char* get_operation_name(transition_data* transition);
-machine_operation_definition* search_machine_operation_in_list(char* operation);
+#include "firstRun.h"
 
 /* Global variables */
 ADDRESS_METHOD last_operand_method;
 bool can_use_copy_previous = false;
 
-/*
- * Description: Executes the first transition of the assembly compiler
- * Input:		1. Input file
- * 				2. File name
- * Output:		Was transition successful
- */
+/* Description: Executes the first run of the assembly compiler */
 bool first_transition_execute(FILE* assembler_input_file, char* file_name_without_extension, unsigned int* IC, unsigned int* DC) {
 	/* Creates the first run data */
 	transition_data* transition = create_transition_data();
@@ -70,10 +68,6 @@ bool first_transition_execute(FILE* assembler_input_file, char* file_name_withou
 
 		*IC = transition->IC;
 		*DC = transition->DC;
-
-		/*TODO: remove only for debugging*/
-		printf("ic is %d\n",transition->IC);
-		printf("dc is %d\n",transition->DC);
 	}
 
 	/* Release memory */
@@ -86,12 +80,7 @@ bool first_transition_execute(FILE* assembler_input_file, char* file_name_withou
 	return success & !transition->is_runtimer_error;
 }
 
-/*
- * Description: Processes a line according to its' type
- * Input:		1. Line information
- * 				2. Current IC address
- * 				3. Current DC value
- */
+/* Description: Processes a line according to its' type */
 void first_transition_process_line(transition_data* transition) {
 	char* label = NULL;
 	char* line_type = NULL;

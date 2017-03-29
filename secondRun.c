@@ -1,3 +1,10 @@
+/*
+ ====================================================================================
+ Name		: 	secondRun.c
+ Description: 	This file holds methods relevant to the second transition run
+ ====================================================================================
+ */
+
 #include <stdio.h>
 
 #include "consts.h"
@@ -62,8 +69,44 @@ void second_transition_execute(FILE* pFile, char* file_name_without_extension,
 		}
 	}/*end of while*/
 
-}
+	/* No error has occurred */
+	if (!transition->is_runtimer_error && !transition->is_compiler_error) {
+		/* Write data initialization section into ob file */
+		write_data_to_output_file(output_files.ob_file);
 
+		/* Close files */
+		if (output_files.ob_file != NULL) {
+			fclose(output_files.ob_file);
+		}
+
+		if (output_files.extern_file != NULL) {
+			fclose(output_files.extern_file);
+		}
+
+		if (output_files.entry_file != NULL) {
+			fclose(output_files.entry_file);
+		}
+	} else {
+		/* Close and delete file */
+		if (output_files.ob_file != NULL) {
+			char* full_name = allocate_string(strlen(file_name_without_extension) + strlen(CODE_FILE_EXT));
+
+			fclose(output_files.ob_file);
+			if (full_name != NULL) {
+				strcpy(full_name, file_name_without_extension);
+				strcat(full_name, CODE_FILE_EXT);
+
+				remove(full_name);
+
+				free(full_name);
+			} else {
+				print_runtime_error("Couldn't delete compilation files");
+			}
+
+		}
+    }
+
+}
 /*
  * Description: Processes a line in input file
  * Input:		1. Current transition data

@@ -1,3 +1,10 @@
+/*
+ ====================================================================================
+ Name		: 	function.c
+ Description: 	This file holds function methods used to process assembly line
+ ====================================================================================
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <ctype.h>

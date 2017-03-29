@@ -1,22 +1,23 @@
+/*
+ ====================================================================================
+ Name		: 	dataEncoder.c
+ Description: 	This file holds methods relevant to .string and .data line processing
+ ====================================================================================
+ */
+
 #include "consts.h"
 #include "structs.h"
 #include "functions.h"
+#include "dataEncoder.h"
 
 #include <string.h>
 #include <stdbool.h>
-
-/*TODO: add function declration to headerfile*/
-bool add_string_data_to_list(char data, unsigned int address);
-bool get_next_number(transition_data* transition, int* number);
 
 /* DataEncoder head and tail */
 data_node_ptr p_data_head = NULL;
 data_node_ptr p_data_tail = NULL;
 
-/*
- * Description: Updates data addresses according to code block size
- * Input:		Code block size
- */
+/* Description: Updates data addresses according to code block size */
 void update_data_address(int ic_length) {
 	data_node_ptr p_current = p_data_head;
 
@@ -24,13 +25,9 @@ void update_data_address(int ic_length) {
 		p_current->current_data.address += ic_length + ADDRESS_START;
 		p_current = p_current->next;
 	}
-}
+}/*end of update_data_address method*/
 
-/*
- * Description: Adds a numeric data to the list
- * Input:		A number
- * Output:		Was the add successful
- */
+/* Description: Adds a numeric data to the list */
 bool add_numeric_data_to_list(int number, unsigned int address) {
 	data_node_ptr p_data = (data_node_ptr)allocate_memory(sizeof(data_node));
 
@@ -47,12 +44,9 @@ bool add_numeric_data_to_list(int number, unsigned int address) {
 	} else {
 		return false;
 	}
-}
+}/*end of add_numeric_data_to_list method*/
 
-/*
- * Description: Adds new data found in code to the list
- * Input:		A new data node
- */
+/* Description: Adds new data found in code to the list */
 void add_data_node_to_list(data_node_ptr p_new_data) {
 	/* This is the first data */
 	if (p_data_head == NULL) {
@@ -63,16 +57,9 @@ void add_data_node_to_list(data_node_ptr p_new_data) {
 		p_data_tail->next = p_new_data;
 		p_data_tail = p_new_data;
 	}
-}
+} /*end of add_data_node_to_list*/
 
-/*
- * Description: Processes a data initialization line
- * Input:		1. Line information
- * 				2. Current DC value
- * 				3. Label value
- * 				4. Type of data (.string, .data)
- * 				5. Does a symbol exists
- */
+/* Description: Processes a data initialization line */
 void first_transition_process_data(transition_data* transition, char* label, char* data_type, bool is_symbol) {
 
 	if (is_symbol) {
@@ -113,13 +100,9 @@ void first_transition_process_data(transition_data* transition, char* label, cha
 	else {
 		process_numbers(transition);
 	}
-}
+}/*end of first_transition_process_data method*/
 
-/*
- * Description: Processes a string
- * Input:		1. Line information
- * 				2. Current DC value
- */
+/* Description: Processes a string */
 void process_string(transition_data* transition) {
 	/* Check if the string starts with " */
 	if (transition->current_line_information->line_str[transition->current_line_information->current_index] != QUOTATION) {
@@ -170,13 +153,9 @@ void process_string(transition_data* transition) {
 			transition->is_compiler_error = true;
 		}
 	}
-}
+}/*end of process string method*/
 
-/*
- * Description: Processes numbers definition
- * Input:		1. Line information
- * 				2. Current DC value
- */
+/* Description: Processes numbers definition */
 void process_numbers(transition_data* transition) {
 	bool should_process_next_number = true;
 	bool success;
@@ -225,13 +204,9 @@ void process_numbers(transition_data* transition) {
 		print_compiler_error(".data syntax is invalid", transition->current_line_information);
 		transition->is_compiler_error = true;
 	}
-}
+}/*end of process numbers method*/
 
-/*
- * Description: Adds a string to the data list
- * Input:		A character of the string
- * Output:		Was the add successful
- */
+/* Description: Adds a string to the data list */
 bool add_string_data_to_list(char data, unsigned int address) {
 	data_node_ptr p_data = (data_node_ptr)allocate_memory(sizeof(data_node));
 
@@ -248,14 +223,9 @@ bool add_string_data_to_list(char data, unsigned int address) {
 	} else {
 		return false;
 	}
-}
+}/*end of add_string_data_to_list method*/
 
-/*
- * Description: Gets the next number from the .data line
- * Input:		1. Current transition data
- * 				2. Pointer to the resulted number
- * Output:		Is number valid
- */
+/* Description: Gets the next number from the .data line */
 bool get_next_number(transition_data* transition, int* number) {
 	skip_all_spaces(transition->current_line_information);
 
@@ -308,4 +278,30 @@ bool get_next_number(transition_data* transition, int* number) {
 		}
 	}
 	return false;
+}/*end of get next number method*/
+
+/*
+ * Second run method
+ * Description: Writes all data definitions into an output file */
+void write_data_to_output_file(FILE* output_file) {
+	data_node_ptr p_current_data = p_data_head;
+
+	while (p_current_data != NULL) {
+		data_definition data = p_current_data->current_data;
+		fprintf(output_file,"%x\t%04x\n",data.address,data.encoded_data.value);
+		p_current_data = p_current_data->next;
+	}
 }
+
+/* Description: Free memory list */
+void free_data_node_list() {
+	data_node_ptr p_cleaner_data = p_data_head;
+
+	/* Clean nodes until no more nodes */
+	while (p_data_head) {
+		p_cleaner_data = p_data_head;
+		p_data_head = p_data_head->next;
+		free (p_cleaner_data);
+	}
+	return;
+} /*end of free_data_node_list method*/

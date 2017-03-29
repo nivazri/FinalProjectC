@@ -1,9 +1,13 @@
+/*
+ ====================================================================================
+ Name		: 	entryEncoder.c
+ Description: 	This file holds methods relevant to .entry line processing
+ ====================================================================================
+ */
+
 #include "structs.h"
 
-/*
- * Description: Processes an entry line in the first transition
- * Input:		1. Line information
- */
+/* Description: Processes an entry line in the first transition */
 void first_transition_process_entry(transition_data* transition) {
 	char* entry_name = get_next_word(transition);
 
@@ -32,10 +36,7 @@ void first_transition_process_entry(transition_data* transition) {
 
 /*
  * Second Run method
- * Description: Processes an entry line in the second transition
- * Input:		1. Line information
- * 				2. Output files
- */
+ * Description: Processes an entry line in the second transition */
 void second_transition_process_entry(transition_data* transition, compiler_output_files* output_files) {
 	char* entry_name = get_next_word(transition);
 
@@ -54,16 +55,13 @@ void second_transition_process_entry(transition_data* transition, compiler_outpu
 			return;
 		}
 
-		fprintf(output_files->entry_file,"%s %x",entry_name,p_symbol->current_symbol.address);
+		fprintf(output_files->entry_file,"%s %x\n",entry_name,p_symbol->current_symbol.address);
 	}
 }
 
 /*
  * Second Run method
- * Description: Creates the entry file if it doesn't exists
- * Input:		1. Output files
- * 				2. File name without extension
- */
+ * Description: Creates the entry file if it doesn't exists */
 void create_entry_output_file_if_needed(compiler_output_files* output_files, char* file_name_without_extension) {
 	if (output_files->entry_file == NULL) {
 		output_files->entry_file = create_output_file(file_name_without_extension, ENTRY_FILE_EXT);

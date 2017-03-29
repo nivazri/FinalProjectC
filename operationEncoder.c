@@ -1,24 +1,16 @@
+/*
+ ====================================================================================
+ Name		: 	operationEncoder.c
+ Description: 	This file holds methods relevant to the operation line processing
+ ====================================================================================
+ */
+
 #include "operationEncoder.h"
 #include "consts.h"
 #include "enums.h"
 #include "structs.h"
 
 #include <string.h>
-
-decoded_operation* get_decoded_operation(transition_data* transition);
-char* get_operation_name(transition_data* transition);
-machine_operation_definition* search_machine_operation_in_list(char* operation);
-bool get_operands(transition_data* transition, int operands_count, char** source_operand, char** target_operand);
-char* get_next_operand(transition_data* transition);
-ADDRESS_METHOD get_address_method(transition_data* transition, char* operand);
-bool are_operand_methods_allowed_in_operation(decoded_operation* current_operation);
-int calculate_operation_size(transition_data* transition, decoded_operation* current_operation);
-bool encode_operation(transition_data* transition, decoded_operation* p_decoded_operation,
-                      compiler_output_files* output_files);
-bool encode_operands(transition_data* transition, decoded_operation* p_decoded_operation, compiler_output_files* output_files);
-bool encode_registers(transition_data* transition, char* source_register, char* target_register, FILE* p_file);
-bool encode_immediate(transition_data* transition, char* operand, FILE* p_file);
-bool encode_direct(transition_data* transition, char* operand, compiler_output_files* output_files);
 
 /* Global variables */
 operation_information_node_ptr p_operation_head = NULL;
@@ -55,9 +47,6 @@ bool init_operation_list() {
 
 /*
  * Description: Adds an operation into the list
- * Input:		1. Operation name
- * 				2. Op code
- * 				3. Number of operands
  * Output:		Did add successfully
  */
 bool add_operation_to_list(char* name, unsigned int code, int operands) {
@@ -117,7 +106,7 @@ void first_transition_process_operation(transition_data* transition, char* label
 		return;
 	}
 
-	/* Step 11 - Check if there is a symbol in the beginning of line */
+	/* Check if there is a symbol in the beginning of line */
 	if (is_symbol) {
 		/* Checks if the symbol was defined in previous lines */
 		symbol_node_ptr p_searched_symbol = search_symbol(label);
@@ -150,10 +139,10 @@ void first_transition_process_operation(transition_data* transition, char* label
 			/* Calculate the operation's size */
 			transition->IC += calculate_operation_size(transition, p_decoded_operation);
         }
-	else {
+        else {
         print_compiler_error("Unauthorized address methods", transition->current_line_information);
         transition->is_compiler_error = true;
-    }
+        }
     }
 }
 
@@ -381,41 +370,39 @@ char* get_next_operand(transition_data* transition) {
 	return operand;
 }
 
-/*
- * Description: Gets the address method according to the operand
- * Input:		1. Current transition
- * 				2. Current operand
- * Output:		Address method
- */
-
-/*
-This function checks if it using two register operand like r5[r2]
-*/
-
+/* This function checks if it using two register operand like r5[r2]*/
 bool is_two_register_operand(char * operand)
 {
+    char tempOperand[MAX_LINE_LENGTH];
     char *first_register;
     char *second_register;
+
+    /*dont effect on the operand variable*/
+    strcpy(tempOperand,operand);
+    /*Assumption according to forum address method 2 without spaces*/
     if(strlen(operand) != 6)
         return false;
-    first_register = strtok(operand, "[");
+
+    first_register = strtok(tempOperand, "[");
     if(!is_register(first_register))
         return false;
+
     second_register = strtok(strtok(NULL,"["),"]");
     if(!is_register(second_register))
         return false;
-    if(atoi(&first_register[1]) % 2 == 1 && atoi(&second_register[1]) % 2 == 0) && isdigit(second_register[1]) && isdigit(first_register[1]))*/
+
+    if(atoi(&first_register[1]) % 2 == 1 && atoi(&second_register[1]) % 2 == 0
+        && isdigit(second_register[1]) && isdigit(first_register[1]))
         return true;
+
     fprintf(stderr,"\nThere is misconfiguration in the order of registers\n");
         return false;
 }
 
+/* Description: Gets the address method according to the operand */
 ADDRESS_METHOD get_address_method(transition_data* transition, char* operand) {
 	/* The operation has no source or target operand. Use IMMEDIATE method for encoding */
-	printf("%s",operand);
-
 	if (operand == NULL) {
-        printf(" 0\n");
 		return IMMEDIATE;
 	} else {
 		int operand_length = strlen(operand);
@@ -445,21 +432,18 @@ ADDRESS_METHOD get_address_method(transition_data* transition, char* operand) {
 					}
 				}
 
-                printf(" 0\n");
 				return IMMEDIATE;
 			}
 			/* The operand is r0-r7 */
 			else if (is_register(operand)) {
-                printf(" 3\n");
 				return DIRECT_REGISTER;
 			}
+			/*the operand is two registers*/
 			else if(is_two_register_operand(operand)){
-                printf(" 2\n");
                 return REGISTER_INDEX;
 			}
 			/* The operand is a variable */
 			else if (is_valid_label(operand)) {
-                printf(" 1\n");
 				return DIRECT;
 			} else {
 				print_compiler_error("Operand isn't a valid label, register, number or $$", transition->current_line_information);
@@ -494,8 +478,6 @@ bool are_operand_methods_allowed_in_operation(decoded_operation* current_operati
 						(current_operation->source_operand_address_method == DIRECT_REGISTER));
 	}
 	else {
-	    /*TODO: remove only for debugging*/
-        printf("fix me according to page 28\n");
 		return true;
 	}
 }
@@ -534,9 +516,6 @@ void second_transition_process_operation(transition_data* transition, compiler_o
 
 	/* Encode the operation */
 	encode_operation(transition, p_decoded_operation, p_output_files);
-
-    /* Updates the transition with the source operand of the current operation */
-	/*update_transition_with_last_operation(transition, p_decoded_operation);*/
 }
 
 /*
@@ -578,9 +557,6 @@ bool encode_operation(transition_data* transition, decoded_operation* p_decoded_
 /*
  * Second Run method
  * Description: Encodes operands into output files
- * Input:		1. Current transition data
- * 				2. Decoded operation
- * 				3. Output files
  * Output:		Were operands encoded successfully
  */
 bool encode_operands(transition_data* transition, decoded_operation* p_decoded_operation, compiler_output_files* output_files) {
@@ -605,7 +581,18 @@ bool encode_operands(transition_data* transition, decoded_operation* p_decoded_o
 				is_valid = encode_registers(transition, p_decoded_operation->source_operand, NULL, output_files->ob_file);
 			} else if (p_decoded_operation->source_operand_address_method == IMMEDIATE) {
 				is_valid = encode_immediate(transition, p_decoded_operation->source_operand, output_files->ob_file);
-			}
+			} else if (p_decoded_operation->source_operand_address_method == REGISTER_INDEX) {
+			    /*FIX ME*/
+			    char* first;
+			    char* second;
+			    char temp[MAX_LINE_LENGTH];
+
+                strcpy(temp,p_decoded_operation->source_operand);
+                first = strtok(temp, "[");
+                second = strtok(strtok(NULL,"["),"]");
+
+                is_valid = encode_registers(transition, second, first, output_files->ob_file);
+			}/*check this*/
 
 			transition->IC++;
 		}
@@ -623,6 +610,7 @@ bool encode_operands(transition_data* transition, decoded_operation* p_decoded_o
 	}
 	return is_valid;
 }
+
 
 /*
  * Second Run method
@@ -655,7 +643,7 @@ bool encode_registers(transition_data* transition, char* source_register, char* 
 	word.register_address.era = ABSOLUTE;
 	word.register_address.rest = 0;
 
-    fprintf(p_file,"%x\t%x\n",transition->IC + ADDRESS_START,word.value);
+    fprintf(p_file,"%x\t%04x\n",transition->IC + ADDRESS_START,word.value);
 
 	return true;
 }
@@ -676,8 +664,9 @@ bool encode_immediate(transition_data* transition, char* operand, FILE* p_file) 
 	number = atoi(operand + 1);
 
 	word.non_register_address.operand_address = number;
-	word.non_register_address.era = ABSOLUTE;
-	word.non_register_address.rest = 0;
+	/**word.non_register_address.era = ABSOLUTE;**/
+	word.non_register_address.era = RELOCATABLE;
+	/*word.non_register_address.rest = 0;*/
 
     fprintf(p_file,"%x\t%x\n",transition->IC + ADDRESS_START,word.value);
 
@@ -720,9 +709,9 @@ bool encode_direct(transition_data* transition, char* operand, compiler_output_f
 			word.non_register_address.era = RELOCATABLE;
 		}
 
-		word.non_register_address.rest = 0;
+		/*word.non_register_address.rest = 0;*/
 
-        fprintf(output_files->ob_file,"%x\t%x\n",transition->IC + ADDRESS_START, word.value);
+        fprintf(output_files->ob_file,"%x\t%04x\n",transition->IC + ADDRESS_START, word.value);
 		return true;
 	}
 }

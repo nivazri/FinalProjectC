@@ -1,13 +1,17 @@
+/*
+ ====================================================================================
+ Name		: 	symbolTable.c
+ Description: 	This file holds methods relevant to working with the symbol table
+ ====================================================================================
+ */
+
 #include "structs.h"
 
 /* SymbolTable head and tail */
 symbol_node_ptr p_symbol_head = NULL;
 symbol_node_ptr p_symbol_tail = NULL;
 
-/*
- * Description: Updates symbol's address after first transition ends
- * Input:		IC value
- */
+/* Description: Updates symbol's address after first transition ends */
 void update_symbol_address(int ic_length) {
 	symbol_node_ptr p_current = p_symbol_head;
 
@@ -24,13 +28,9 @@ void update_symbol_address(int ic_length) {
 
 		p_current = p_current->next;
 	}
-}
+}/*end of update_symbol_address method*/
 
-/*
- * Description: Search input symbol in symbol table
- * Input:		Symbol name
- * Output:		Current symbol node
- */
+/* Description: Search input symbol in symbol table */
 symbol_node_ptr search_symbol(char* symbol_name) {
 	symbol_node_ptr p_current = p_symbol_head;
 
@@ -40,16 +40,9 @@ symbol_node_ptr search_symbol(char* symbol_name) {
 	}
 
 	return p_current;
-}
+}/*end of search_symbol method*/
 
-/*
- * Description: Creates a new symbol node
- * Input:		1. Symbol name
- * 				2. IC address
- * 				3. Is external
- * 				4. Is instruction
- * Output: 		New symbol node
- */
+/* Description: Creates a new symbol node */
 symbol_node_ptr create_symbol(char* name, unsigned int address, bool is_extern, bool is_instruction) {
 	symbol_node_ptr p_node = (symbol_node_ptr)allocate_memory(sizeof(symbol_node));
 
@@ -63,12 +56,9 @@ symbol_node_ptr create_symbol(char* name, unsigned int address, bool is_extern, 
 	}
 
 	return p_node;
-}
+}/*end of create_symbol method*/
 
-/*
- * Description: Adds a new symbol to the list
- * Input:		The new symbol
- */
+/* Description: Adds a new symbol to the list */
 void add_symbol_to_list(symbol_node_ptr p_new_symbol) {
 	/* List is empty */
 	if (p_symbol_head == NULL) {
@@ -78,4 +68,17 @@ void add_symbol_to_list(symbol_node_ptr p_new_symbol) {
 		p_symbol_tail->next = p_new_symbol;
 		p_symbol_tail = p_new_symbol;
 	}
-}
+}/*end of add_symbol_to_list method*/
+
+/* Description: Free symbol list from memory */
+void free_symbol_list() {
+	symbol_node_ptr p_cleaner_data = p_symbol_head;
+
+	/* Clean nodes until no more nodes */
+	while (p_symbol_head) {
+		p_cleaner_data = p_symbol_head;
+		p_symbol_head = p_symbol_head->next;
+		free (p_cleaner_data);
+	}
+	return;
+}/*end of free_symbol_list method*/

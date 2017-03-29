@@ -1,10 +1,15 @@
+/*
+ ====================================================================================
+ Name		: 	externEncoder.c
+ Description: 	This file holds methods relevant to .extern line processing
+ ====================================================================================
+ */
+
 #include "structs.h"
 
 /*
  * Description: Process the extern definition in first transition.
- * 				Adds it into the symbol table
- * Input:		1. Current transition
- */
+ * 				Adds it into the symbol table */
 void first_transition_process_extern(transition_data* transition) {
 	symbol_node_ptr p_symbol = NULL;
 
@@ -46,10 +51,7 @@ void first_transition_process_extern(transition_data* transition) {
 
 /*
  * Second Run method
- * Description: Creates the entry file if it doesn't exists
- * Input:		1. Output files
- * 				2. File name without extension
- */
+ * Description: Creates the entry file if it doesn't exists*/
 void create_extern_output_file_if_needed(compiler_output_files* output_files, char* file_name_without_extension) {
 	if (output_files->extern_file == NULL) {
 		output_files->extern_file = create_output_file(file_name_without_extension, EXTERN_FILE_EXT);

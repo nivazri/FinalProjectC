@@ -2,7 +2,7 @@
 #define CONSTS_H_
 
 /* Length of line in code */
-#define MAX_LINE_LENGTH 200
+#define MAX_LINE_LENGTH 80
 
 /* Address definitions */
 #define ADDRESS_START 100
@@ -15,9 +15,11 @@
 #define LABEL_END_TOKEN ':'
 #define LABEL_MAX_LENGTH 30
 
+/* String definitions*/
 #define END_OF_STRING '\0'
 #define END_OF_LINE '\n'
 
+/* Signs*/
 #define MINUS_SIGN '-'
 #define PLUS_SIGN '+'
 #define STRING_DATA_END 0
@@ -31,13 +33,20 @@
 #define REGISTER_SEPRATOR '['
 #define UNUSED_BITS 111
 
-/* Memory word bits */
+/* Operation bits */
 #define MEMORY_WORD 15
-#define DATA_WORD_BITS_LENGTH MEMORY_WORD
 #define OPERATION_GROUP_BITS_LENGTH 2
 #define OPERATION_OP_CODE_BITS_LENGTH 4
 #define OPERATION_ADDRESS_METHOD_BITS_LENGTH 2
 #define OPERATION_ERA_BITS_LENGTH 2
+#define OPERATION_REST_BITS 3
+
+/* Register bits*/
+#define REGISTER_ADDRESS_METHOD_BITS_LENGTH 6
+#define REGISTERS_REST_BITS 1
+
+/*Memory vars bits*/
+#define OPERAND_BITS 13
 
 /* Operation definitions */
 #define OPERAION_MIN_WORD_SIZE 1

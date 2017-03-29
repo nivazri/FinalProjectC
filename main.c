@@ -1,3 +1,18 @@
+/*
+ ====================================================================================
+ Name		: 	main.c
+ Author's	: 	Niv Azriel, Or Friedman
+ Description: 	This program will compile an assembler code file.
+ 	 	 	 	In case of errors in file it will print them out.
+ Input		:	Arguments as file name without extension to be compiled
+ Output		:	If we've found syntax errors - prints them.
+ 	 	 	 	Else for each valid file we create
+ 	 	 	 	 1) ob  - decoded operations in base 4 and memory address
+ 	 	 	 	 2) ent - memory address of labels
+ 	 	 	 	 3) ext - memory address of each extern variable used in ob file
+ ====================================================================================
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,9 +25,8 @@
  * Description: Cleaning up memory between files, global call for all cleanups
  */
 void file_compilation_memory_clean() {
-/**	free_data_node_list();
-	free_symbol_list();**/
-	printf("fix free");
+	free_data_node_list();
+	free_symbol_list();
 	return;
 }
 
