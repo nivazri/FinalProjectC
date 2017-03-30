@@ -387,6 +387,29 @@ char* get_next_operand(transition_data* transition) {
  * 				2. Current operand
  * Output:		Address method
  */
+
+/*
+This function checks if it using two register operand like r5[r2]
+*/
+
+bool is_two_register_operand(char * operand)
+{
+    char *first_register;
+    char *second_register;
+    if(strlen(operand) != 6)
+        return false;
+    first_register = strtok(operand, "[");
+    if(!is_register(first_register))
+        return false;
+    second_register = strtok(strtok(NULL,"["),"]");
+    if(!is_register(second_register))
+        return false;
+    if(atoi(&first_register[1]) % 2 == 1 && atoi(&second_register[1]) % 2 == 0) && isdigit(second_register[1]) && isdigit(first_register[1]))*/
+        return true;
+    fprintf(stderr,"\nThere is misconfiguration in the order of registers\n");
+        return false;
+}
+
 ADDRESS_METHOD get_address_method(transition_data* transition, char* operand) {
 	/* The operation has no source or target operand. Use IMMEDIATE method for encoding */
 	printf("%s",operand);
@@ -430,7 +453,7 @@ ADDRESS_METHOD get_address_method(transition_data* transition, char* operand) {
                 printf(" 3\n");
 				return DIRECT_REGISTER;
 			}
-			else if(strchr(operand,REGISTER_SEPRATOR)){
+			else if(is_two_register_operand(operand)){
                 printf(" 2\n");
                 return REGISTER_INDEX;
 			}
