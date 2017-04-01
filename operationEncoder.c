@@ -618,7 +618,7 @@ bool encode_operands(transition_data* transition, decoded_operation* p_decoded_o
 	             is_valid = encode_registers(transition, NULL, p_decoded_operation->target_operand, output_files->ob_file);
 		} else if (p_decoded_operation->target_operand_address_method == IMMEDIATE) {
 		     is_valid = encode_immediate(transition, p_decoded_operation->target_operand, output_files->ob_file);
-		} else if (p_decoded_operation->source_operand_address_method == REGISTER_INDEX) {
+		} else if (p_decoded_operation->target_operand_address_method == REGISTER_INDEX) {
 		     char* first;
                      char* second;
                      char temp[MAX_LINE_LENGTH];
