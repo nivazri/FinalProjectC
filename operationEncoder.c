@@ -471,12 +471,37 @@ bool are_operand_methods_allowed_in_operation(decoded_operation* current_operati
 
 	/*
 	 * lea operation
-	 * First operand: only direct and register_index is valid
+	 * Source operand: only direct and register_index is valid
 	 */
 	else if (strcmp(current_operation->operation->name, LEA_OPERATION) == 0) {
 		return  ((current_operation->source_operand_address_method == DIRECT) ||
-						(current_operation->source_operand_address_method == DIRECT_REGISTER));
+                 (current_operation->source_operand_address_method == DIRECT_REGISTER));
 	}
+
+	/*
+	 * mov,add,sub operation
+     * Target operand: only IMMIDIATE is noy valid
+	 */
+	else if (strcmp(current_operation->operation->name, MOV_OPERATION) == 0 ||
+             strcmp(current_operation->operation->name, ADD_OPERATION) == 0 ||
+             strcmp(current_operation->operation->name, SUB_OPERATION) == 0){
+        return (current_operation->target_operand_address_method != IMMEDIATE);
+    }
+    /*
+ 	 * not,clr,inc,dec,jmp,bne,red,jsr operation
+ 	 * Source operand: Does not have any methods
+ 	 * Target operand: only direct,register index,direct register
+ 	 */
+    else if (strcmp(current_operation->operation->name, NOT_OPERATION) == 0 ||
+             strcmp(current_operation->operation->name, CLR_OPERATION) == 0 ||
+             strcmp(current_operation->operation->name, INC_OPERATION) == 0 ||
+             strcmp(current_operation->operation->name, DEC_OPERATION) == 0 ||
+             strcmp(current_operation->operation->name, JMP_OPERATION) == 0 ||
+             strcmp(current_operation->operation->name, BNE_OPERATION) == 0 ||
+             strcmp(current_operation->operation->name, RED_OPERATION) == 0 ||
+             strcmp(current_operation->operation->name, JSR_OPERATION) == 0 ){
+        return (current_operation->target_operand_address_method!=IMMEDIATE);
+    }
 	else {
 		return true;
 	}
