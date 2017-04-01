@@ -689,10 +689,9 @@ bool encode_immediate(transition_data* transition, char* operand, FILE* p_file) 
 	number = atoi(operand + 1);
 
 	word.non_register_address.operand_address = number;
-	/**word.non_register_address.era = ABSOLUTE;**/
-	word.non_register_address.era = RELOCATABLE;
-	/*word.non_register_address.rest = 0;*/
+	word.non_register_address.era = ABSOLUTE;
 
+    printf("%x\n",word.value);
     fprintf(p_file,"%x\t%x\n",transition->IC + ADDRESS_START,word.value);
 
 	return true;
