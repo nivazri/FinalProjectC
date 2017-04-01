@@ -1,9 +1,6 @@
 /*
 ToDo list:
 
- - build makefile
- - editor to ubuntu
-
 !!! - write a method for seperate to registers for address method 2
   search FIX ME in operation.c !!!
 !!! - fix are_operand_methods_allowed_in_operation !!!
