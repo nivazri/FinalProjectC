@@ -12,6 +12,7 @@
 #include "structs.h"
 #include "functions.h"
 #include "firstRun.h"
+#include "operationEncoder.h"
 
 /* Global variables */
 ADDRESS_METHOD last_operand_method;

@@ -63,17 +63,53 @@ bool is_end_of_data_in_line(line_info* info);
 char* get_next_word(transition_data* transition);
 
  /*
-  *   Description: Checks if the string is a valid label
-  *   Input:       String to check
-  *   Output:      True if the string is label, else false
+  * Description: Checks if the string is a valid label
+  * Input:       String to check
+  * Output:      True if the string is label, else false
   */
 
 bool is_valid_label(char* str);
  /*
-  *   Description: Checks if we've reached end of line
-  *   Input:       Line information
-  *   Output:      True if we've reached end of lines, otherwise false
+  * Description: Checks if we've reached end of line
+  * Input:       Line information
+  * Output:      True if we've reached end of lines, otherwise false
   */
 bool is_end_of_line(line_info* info);
 
+ /*
+  * Description: Checks if operand is a register
+  * Input:       Operand
+  * Output:      True if register, otherwise false
+  */
+ bool is_register(char* operand);
+ /*
+  * Description: Checks if this is a valid operation line
+  * Input:       Line information
+  */
+ bool is_valid_is_operation_line (line_info* info);
+
+ /*
+  * Description: Creates a line information structure
+  * Input:       1. File name
+  *              2. Line number
+  *              3. Line content
+  * Output:      Pointer to line information
+  */
+  line_info* create_line_info(char* file_name, int line_number, char* line_str);
+ /*
+  *  Description: Checks if this is an empty line or a comment
+  *  Input:       The line to check
+  *  Output:      Is this an empty line or a comment
+  */
+   bool is_empty_or_comment(char* line);
+ /*
+  *  Description: Creates a transition data structure
+  *  Output:      Basic transition data
+  */
+    transition_data* create_transition_data();
+ /*
+  *  Description: Skips the label
+  *  Input:       Line information
+  */
+    void skip_label(line_info* info);
 #endif /* FUNCTIONS_H_ */

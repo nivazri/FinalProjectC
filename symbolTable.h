@@ -1,3 +1,6 @@
+#ifndef SYMBOLTABLE_H_
+#define SYMBOLTABLE_H_
+
   /*
    *    Description: Adds a symbot to the symbol table
    *    Input: The new symbol
@@ -25,3 +28,6 @@ symbol_node_ptr create_symbol(char* name, unsigned int address, bool is_extern, 
  *     
  */
 symbol_node_ptr search_symbol(char* symbol_name);
+ /* Description: Free symbol list from memory */
+ void free_symbol_list();
+#endif /* SYMBOLTABLE_H_ */

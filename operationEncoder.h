@@ -138,4 +138,20 @@ bool encode_direct(transition_data* transition, char* operand, compiler_output_f
 
 
 void create_extern_output_file_if_needed(compiler_output_files* output_files, char* file_name_without_extension);
+
+ /*
+  * Description: Process an operation line on first transition
+  * Input:      1. Current transition data
+  *             2. Label value (NULL if doesn't exist)
+  *             3. Does label exist
+  */
+ void first_transition_process_operation(transition_data* transition, char* label, bool is_symbol);
+ /*
+  *  
+  * Description: Process an operation line on second transition
+  * Input:       1. Current transition data
+  *              2. Output files
+  */
+  void second_transition_process_operation(transition_data* transition, compiler_output_files* p_output_files);
+
 #endif /* OPERATIONENCODER_H_ */

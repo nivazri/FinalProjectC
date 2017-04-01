@@ -17,10 +17,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-
+#include "structs.h"
 #include "functions.h"
 #include "consts.h"
-
+#include "firstRun.h"
+#include "secondRun.h"
+#include "operationEncoder.h"
+#include "dataEncoder.h"
+#include "symbolTable.h"
 /*
  * Description: Cleaning up memory between files, global call for all cleanups
  */

@@ -21,4 +21,7 @@ bool add_string_data_to_list(char data, unsigned int address);
  * Output:		Is number valid
  */
 bool get_next_number(transition_data* transition, int* number);
+
+/* Description: Free memory list */
+ void free_data_node_list();
 #endif /* DATA_H_ */

@@ -6,10 +6,11 @@
  */
 
 #include <stdio.h>
-
+#include "operationEncoder.h"
 #include "consts.h"
 #include "structs.h"
-
+#include "functions.h"
+#include "secondRun.h"
 /*
  * Description: Executes the second transition
  * Input:		1. Input file handle
