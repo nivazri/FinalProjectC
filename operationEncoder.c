@@ -395,9 +395,7 @@ bool is_two_register_operand(char * operand)
     if(atoi(&first_register[1]) % 2 == 1 && atoi(&second_register[1]) % 2 == 0
         && isdigit(second_register[1]) && isdigit(first_register[1]))
         return true;
-
-    fprintf(stderr,"\nThere is misconfiguration in the order of registers\n");
-        return false;
+    return false;
 }
 
 /* Description: Gets the address method according to the operand */
