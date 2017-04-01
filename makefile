@@ -29,4 +29,4 @@ functions.o: functions.c structs.h
         gcc -c -ansi -Wall -pedantic functions.c -o functions.o
 
 clean:
-        rm *.o
+       rm *.o
