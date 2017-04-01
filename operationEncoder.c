@@ -9,7 +9,8 @@
 #include "consts.h"
 #include "enums.h"
 #include "structs.h"
-
+#include "functions.h"
+#include "symbolTable.h"
 #include <string.h>
 
 /* Global variables */
@@ -555,7 +556,6 @@ bool encode_operation(transition_data* transition, decoded_operation* p_decoded_
                       compiler_output_files* output_files) {
 
 	encoded_operation coded_op;
-	int i;
 
 	/* Initlaizes the encoded operation with its' values */
 	coded_op.bits.source_operand_address_method = p_decoded_operation->source_operand_address_method;
@@ -563,7 +563,7 @@ bool encode_operation(transition_data* transition, decoded_operation* p_decoded_
 	coded_op.bits.group = p_decoded_operation->operation->operands_number;
 	coded_op.bits.op_code = p_decoded_operation->operation->code;
 	coded_op.bits.era = ABSOLUTE;
-	coded_op.bits.rest = UNUSED_BITS;
+    coded_op.bits.rest = UNUSED_BITS;
 
     fprintf(output_files->ob_file,"%x\t%x\n",transition->IC + ADDRESS_START,coded_op.value);
 

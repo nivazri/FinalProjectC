@@ -6,6 +6,7 @@
  */
 
 #include "structs.h"
+#include "functions.h"
 
 /* SymbolTable head and tail */
 symbol_node_ptr p_symbol_head = NULL;

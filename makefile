@@ -1,6 +1,6 @@
 Assembler: Assembler.o secondRun.o firstRun.o operationEncoder.o dataEncoder.o entryEncoder.o externEncoder.o symbolTable.o functions.o
 	gcc -g -ansi -Wall -pedantic Assembler.o secondRun.o firstRun.o operationEncoder.o dataEncoder.o entryEncoder.o externEncoder.o symbolTable.o functions.o -o assembler
-
+	rm -f *.o
 Assembler.o: main.c functions.h consts.h
 	gcc -c -ansi -Wall -pedantic main.c -o Assembler.o
 

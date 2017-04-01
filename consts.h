@@ -31,7 +31,7 @@
 #define REGISTER_FIRST_TOKEN 'r'
 #define REGISTERS_COUNT 8
 #define REGISTER_SEPRATOR '['
-#define UNUSED_BITS 111
+#define UNUSED_BITS  7 /*111 in base 2*/
 
 /* Operation bits */
 #define MEMORY_WORD 15

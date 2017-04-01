@@ -9,8 +9,8 @@
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
-
 #include "structs.h"
+#include "functions.h"
 
 void* allocate_memory(int bytes);
 
@@ -133,7 +133,6 @@ void skip_all_spaces(line_info* info) {
  * Output:		True if label, otherwise false
  */
 bool is_valid_label(char* str) {
-	int i;
 	int len = strlen(str);
 
 	/*
@@ -144,6 +143,7 @@ bool is_valid_label(char* str) {
 	if (!isalpha(str[0]) || len > LABEL_MAX_LENGTH) {
 		return false;
 	}
+	return true;
 }
 
 /*

@@ -9,14 +9,16 @@
 #include "structs.h"
 #include "functions.h"
 #include "dataEncoder.h"
-
+#include "symbolTable.h"
 #include <string.h>
 #include <stdbool.h>
 
 /* DataEncoder head and tail */
 data_node_ptr p_data_head = NULL;
 data_node_ptr p_data_tail = NULL;
-
+void process_numbers(transition_data* transition);
+void process_string(transition_data* transition);
+void add_data_node_to_list(data_node_ptr p_new_data);
 /* Description: Updates data addresses according to code block size */
 void update_data_address(int ic_length) {
 	data_node_ptr p_current = p_data_head;

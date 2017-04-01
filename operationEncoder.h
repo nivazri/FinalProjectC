@@ -136,4 +136,6 @@ bool encode_immediate(transition_data* transition, char* operand, FILE* p_file);
  */
 bool encode_direct(transition_data* transition, char* operand, compiler_output_files* output_files);
 
+
+void create_extern_output_file_if_needed(compiler_output_files* output_files, char* file_name_without_extension);
 #endif /* OPERATIONENCODER_H_ */
