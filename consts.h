@@ -3,6 +3,7 @@
 
 /* Length of line in code */
 #define MAX_LINE_LENGTH 80
+#define TWO_REGISTER_FIXED_LEN 6
 
 /* Address definitions */
 #define ADDRESS_START 100

@@ -373,7 +373,7 @@ bool is_two_register_operand(char * operand)
     /*dont effect on the operand variable*/
     strcpy(tempOperand,operand);
     /*Assumption according to forum address method 2 without spaces*/
-    if(strlen(operand) != 6)
+    if(strlen(operand) != TWO_REGISTER_FIXED_LEN)
         return false;
 
     first_register = strtok(tempOperand, "[");
@@ -591,36 +591,45 @@ bool encode_operands(transition_data* transition, decoded_operation* p_decoded_o
 		if (p_decoded_operation->operation->operands_number == 2) {
 			/* Encode the source operand */
 			if (p_decoded_operation->source_operand_address_method == DIRECT) {
-				is_valid = encode_direct(transition, p_decoded_operation->source_operand, output_files);
+			    is_valid = encode_direct(transition, p_decoded_operation->source_operand, output_files);
 			} else if (p_decoded_operation->source_operand_address_method == DIRECT_REGISTER) {
-				is_valid = encode_registers(transition, p_decoded_operation->source_operand, NULL, output_files->ob_file);
+		            is_valid = encode_registers(transition, p_decoded_operation->source_operand, NULL, output_files->ob_file);
 			} else if (p_decoded_operation->source_operand_address_method == IMMEDIATE) {
-				is_valid = encode_immediate(transition, p_decoded_operation->source_operand, output_files->ob_file);
+			    is_valid = encode_immediate(transition, p_decoded_operation->source_operand, output_files->ob_file);
 			} else if (p_decoded_operation->source_operand_address_method == REGISTER_INDEX) {
-			    /*FIX ME*/
 			    char* first;
 			    char* second;
 			    char temp[MAX_LINE_LENGTH];
 
-                strcpy(temp,p_decoded_operation->source_operand);
-                first = strtok(temp, "[");
-                second = strtok(strtok(NULL,"["),"]");
+                	    strcpy(temp,p_decoded_operation->source_operand);
+                            first = strtok(temp, "[");
+                            second = strtok(strtok(NULL,"["),"]");
 
-                is_valid = encode_registers(transition, second, first, output_files->ob_file);
-			}/*check this*/
+                            is_valid = encode_registers(transition, second, first, output_files->ob_file);
+			}
 
 			transition->IC++;
 		}
 
 		/* Encode the target operand */
 		if (p_decoded_operation->target_operand_address_method == DIRECT) {
-			is_valid = encode_direct(transition, p_decoded_operation->target_operand, output_files);
+		     is_valid = encode_direct(transition, p_decoded_operation->target_operand, output_files);
 		} else if (p_decoded_operation->target_operand_address_method == DIRECT_REGISTER) {
-			is_valid = encode_registers(transition, NULL, p_decoded_operation->target_operand, output_files->ob_file);
+	             is_valid = encode_registers(transition, NULL, p_decoded_operation->target_operand, output_files->ob_file);
 		} else if (p_decoded_operation->target_operand_address_method == IMMEDIATE) {
-			is_valid = encode_immediate(transition, p_decoded_operation->target_operand, output_files->ob_file);
+		     is_valid = encode_immediate(transition, p_decoded_operation->target_operand, output_files->ob_file);
+		} else if (p_decoded_operation->source_operand_address_method == REGISTER_INDEX) {
+		     char* first;
+                     char* second;
+                     char temp[MAX_LINE_LENGTH];
+ 		     
+		     strcpy(temp,p_decoded_operation->target_operand);
+		     first=strtok(temp, "[");
+		     second = strtok(strtok(NULL,"["),"]");
+		     
+		     is_valid = encode_registers(transition, second, first, output_files->ob_file);		
 		}
-
+		
 		transition->IC++;
 	}
 	return is_valid;
