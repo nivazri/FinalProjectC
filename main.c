@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
 			print_runtime_error("Could not open a source file");
 		}
 		else {
-            /* Check if we had errors, if we didn't, move on to the next run */
+            	/* Check if we had errors, if we didn't, move on to the next run */
 			bool should_continue = first_transition_execute(p_file, curr_file, &ic, &dc);
 
 			if (should_continue) {

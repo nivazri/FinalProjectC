@@ -16,10 +16,7 @@
 /* Global variables */
 operation_information_node_ptr p_operation_head = NULL;
 
-/*
- * Description: Initializes the operation list used for encoding
- * Output:		Did the initialization succeeded
- */
+/* Description: Initializes the operation list used for encoding */
 bool init_operation_list() {
 	bool initialized = true;
 
@@ -46,10 +43,7 @@ bool init_operation_list() {
 	return initialized;
 }
 
-/*
- * Description: Adds an operation into the list
- * Output:		Did add successfully
- */
+/* Description: Adds an operation into the list */
 bool add_operation_to_list(char* name, unsigned int code, int operands) {
 	bool added = false;
 
@@ -76,9 +70,7 @@ bool add_operation_to_list(char* name, unsigned int code, int operands) {
 	return added;
 }
 
-/*
- * Description: Free memory for operations list
- */
+/* Description: Free memory for operations list */
 void free_operation_list() {
 	operation_information_node_ptr p_cleaner_data = p_operation_head;
 
@@ -94,8 +86,8 @@ void free_operation_list() {
 /*
  * Description: Process an operation line on first transition
  * Input: 		1. Current transition data
- * 				2. Label value (NULL if doesn't exist)
- * 				3. Does label exist
+ * 			2. Label value (NULL if doesn't exist)
+ * 			3. Does label exist
  */
 void first_transition_process_operation(transition_data* transition, char* label, bool is_symbol) {
 	decoded_operation* p_decoded_operation = NULL;
@@ -150,8 +142,8 @@ void first_transition_process_operation(transition_data* transition, char* label
 /*
  * Description: Get all data of operation in line
  * Input:		1. Line information
- * 				2. Can use copy previous address method
- * 				3. Previous address method
+ * 			2. Can use copy previous address method
+ * 			3. Previous address method
  * Output:		Operation data
  */
 decoded_operation* get_decoded_operation(transition_data* transition) {
@@ -164,10 +156,10 @@ decoded_operation* get_decoded_operation(transition_data* transition) {
 		return NULL;
 	}
 
-    /* Find operation in machine operation list */
+    	/* Find operation in machine operation list */
 	p_operation_information = search_machine_operation_in_list(operation_name);
 
-    /* The operation name isn't valid */
+    	/* The operation name isn't valid */
 	if (p_operation_information == NULL) {
 		print_compiler_error("Invalid operation name", transition->current_line_information);
 		transition->is_compiler_error = true;
@@ -412,7 +404,7 @@ ADDRESS_METHOD get_address_method(transition_data* transition, char* operand) {
 				int i = 1;
 
 				/* Operand has - on its' start */
-				if (operand[1] == MINUS_SIGN) {
+				if ((operand[1] == MINUS_SIGN) || (operand[1] == PLUS_SIGN)) {
 					i++;
 
 					if (operand_length == 1) {
@@ -445,7 +437,7 @@ ADDRESS_METHOD get_address_method(transition_data* transition, char* operand) {
 			else if (is_valid_label(operand)) {
 				return DIRECT;
 			} else {
-				print_compiler_error("Operand isn't a valid label, register, number or $$", transition->current_line_information);
+				print_compiler_error("Operand isn't a valid label, register, number", transition->current_line_information);
 				transition->is_compiler_error = true;
 				return INVALID_ADDRESS_METHOD;
 			}
@@ -479,14 +471,14 @@ bool are_operand_methods_allowed_in_operation(decoded_operation* current_operati
 
 	/*
 	 * mov,add,sub operation
-     * Target operand: only IMMIDIATE is noy valid
+     	 * Target operand: only IMMIDIATE is noy valid
 	 */
 	else if (strcmp(current_operation->operation->name, MOV_OPERATION) == 0 ||
              strcmp(current_operation->operation->name, ADD_OPERATION) == 0 ||
              strcmp(current_operation->operation->name, SUB_OPERATION) == 0){
         return (current_operation->target_operand_address_method != IMMEDIATE);
     }
-    /*
+    	/*
  	 * not,clr,inc,dec,jmp,bne,red,jsr operation
  	 * Source operand: Does not have any methods
  	 * Target operand: only direct,register index,direct register
@@ -546,8 +538,8 @@ void second_transition_process_operation(transition_data* transition, compiler_o
  * Second Run method
  * Description: Encodes an operation into its output file
  * Input:		1. Current transition data
- * 				2. Decoded operation
- * 				3. Output files
+ * 			2. Decoded operation
+ * 			3. Output files
  * Output:		Was the operation encoded successfully
  */
 bool encode_operation(transition_data* transition, decoded_operation* p_decoded_operation,
@@ -639,9 +631,9 @@ bool encode_operands(transition_data* transition, decoded_operation* p_decoded_o
  * Second Run method
  * Description: Encodes register operands
  * Input:		1. Current transition
- * 				2. Source register
- * 				3. Target register
- * 				4. Output file
+ * 			2. Source register
+ * 			3. Target register
+ * 			4. Output file
  * Output:		Were operands encoded successfully
  */
 bool encode_registers(transition_data* transition, char* source_register, char* target_register, FILE* p_file) {
@@ -675,8 +667,8 @@ bool encode_registers(transition_data* transition, char* source_register, char* 
  * Second Run method
  * Description: Encodes a immediate number
  * Input:		1. Current transition
- * 				2. Immediate operand
- * 				3. Output file
+ * 			2. Immediate operand
+ * 			3. Output file
  * Output:		Was operand encoded successfully
  */
 bool encode_immediate(transition_data* transition, char* operand, FILE* p_file) {
@@ -697,8 +689,8 @@ bool encode_immediate(transition_data* transition, char* operand, FILE* p_file) 
 /*
  * Description: Encodes a direct operand
  * Input:		1. Current transition
- * 				2. Direct operand
- * 				3. Output files
+ * 			2. Direct operand
+ * 			3. Output files
  * Output:		Was operand encoded successfully
  */
 bool encode_direct(transition_data* transition, char* operand, compiler_output_files* output_files) {
@@ -729,8 +721,6 @@ bool encode_direct(transition_data* transition, char* operand, compiler_output_f
 		} else {
 			word.non_register_address.era = RELOCATABLE;
 		}
-
-		/*word.non_register_address.rest = 0;*/
 
         fprintf(output_files->ob_file,"%x\t%04x\n",transition->IC + ADDRESS_START, word.value);
 		return true;

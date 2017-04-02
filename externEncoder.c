@@ -8,6 +8,7 @@
 #include "structs.h"
 #include "symbolTable.h"
 #include "functions.h"
+
 /*
  * Description: Process the extern definition in first transition.
  * 				Adds it into the symbol table */

@@ -4,7 +4,7 @@
 /*
  * Description: Executes the first transition of the assembly compiler
  * Input:		1. Input file
- * 				2. File name
+ * 			2. File name
  * Output:		Was transition successful
  */
 bool first_transition_execute(FILE* pFile, char* file_name, unsigned int* IC, unsigned int* DC);
@@ -12,8 +12,8 @@ bool first_transition_execute(FILE* pFile, char* file_name, unsigned int* IC, un
 /*
  * Description: Processes a line according to its' type
  * Input:		1. Line information
- * 				2. Current IC address
- * 				3. Current DC value
+ * 			2. Current IC address
+ * 			3. Current DC value
  */
 void first_transition_process_line(transition_data* transition);
 

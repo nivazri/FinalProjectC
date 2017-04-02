@@ -32,7 +32,7 @@ void print_runtime_error(char* message);
 /*
  * Description: Prints a compiler error to the user
  * Input:		1. Message
- * 				2. Current line
+ * 			2. Current line
  */
 void print_compiler_error(char* message, line_info* info);
 

@@ -12,7 +12,6 @@
 void create_entry_output_file_if_needed(compiler_output_files* output_files, char* file_name_without_extension);
 
 /* Description: Processes an entry line in the first transition */
-
 void first_transition_process_entry(transition_data* transition) {
 	char* entry_name = get_next_word(transition);
 
